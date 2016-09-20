@@ -20,6 +20,8 @@ AB两台服务器中的项目均将日志写到文件系统的`/home/data/logs/l
 
 ## 使用方法
 
+使用前需要宿主机建立与远程主机之间的[ssh公钥免密码登陆](http://b.aicode.cc/linux/2015/04/27/Linux%E4%BD%BF%E7%94%A8SSH%E5%85%AC%E9%92%A5%E5%85%8D%E5%AF%86%E7%A0%81%E7%99%BB%E5%BD%95.html)，后续版本将加入密码支持。
+
     remote-tail -hosts 'watcher@192.168.1.226,watcher@192.168.1.225' \
     -file '/usr/local/openresty/nginx/logs/access.log'
 
