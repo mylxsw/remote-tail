@@ -8,4 +8,30 @@ RemoteTail是一款支持同步显示多台远程服务器的日志文件内容�
 
 假设公司有两台web服务器A和B，由于初期没有专业运维进行配置集中式的日志服务系统，两台服务器上分别部署了两套相同的代码提供web服务，使用nginx作为负载均衡，请求根据设定的策略转发的这两台web服务器上。
 
-AB两台服务器中的项目均将日志写到文件系统的`/home/data/logs/laravel.log`文件。这种情况下如果我们需要查看web日志是否正常，一般情况下就需要分别登陆两台服务器，然后分别执行`tail -f /home/data/logs/laravel.log`查看日志文件的最新内容，这在排查问题的时候是非常不方便的。
+AB两台服务器中的项目均将日志写到文件系统的`/home/data/logs/laravel.log`文件。这种情况下如果我们需要查看web日志是否正常，一般情况下就需要分别登陆两台服务器，然后分别执行`tail -f /home/data/logs/laravel.log`查看日志文件的最新内容，这在排查问题的时候是非常不方便的。RemoteTail就是为了解决这种问题的，开发人员可以使用它同步显示两台（多台）服务器的日志信息。
+
+## 安装
+
+下载项目`bin/`下对应的`remote-tail-平台`可执行文件，将该文件加入到系统的`PATH`环境变量指定的目录中即可。
+
+比如，Centos下可以放到`/usr/local/bin`目录。
+
+    mv remote-tail-linux /usr/local/bin/remote-tail
+
+## 使用方法
+
+    remote-tail -hosts 'watcher@192.168.1.226,watcher@192.168.1.225' -file '/usr/local/openresty/nginx/logs/access.log'
+
+![demo](https://oayrssjpa.qnssl.com/remote-tail-demo.jpg)
+
+## 如何贡献
+
+欢迎贡献新的功能以及bug修复，**Fork**项目后修改代码，测试通过后提交**pull request**即可。
+
+## 问题反馈
+
+你可以在github的issue中提出你的bug或者其它需求，也可以通过以下方式直接联系我。
+
+- 微信：mylxsw
+- 微博：[管宜尧](http://weibo.com/code404)
+- QQ：729181311
