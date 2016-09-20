@@ -20,7 +20,8 @@ AB两台服务器中的项目均将日志写到文件系统的`/home/data/logs/l
 
 ## 使用方法
 
-    remote-tail -hosts 'watcher@192.168.1.226,watcher@192.168.1.225' -file '/usr/local/openresty/nginx/logs/access.log'
+    remote-tail -hosts 'watcher@192.168.1.226,watcher@192.168.1.225' \
+    -file '/usr/local/openresty/nginx/logs/access.log'
 
 ![demo](https://oayrssjpa.qnssl.com/remote-tail-demo.jpg)
 
