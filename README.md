@@ -20,12 +20,48 @@ AB两台服务器中的项目均将日志写到文件系统的`/home/data/logs/l
 
 ## 使用方法
 
-使用前需要宿主机建立与远程主机之间的[ssh公钥免密码登陆](http://b.aicode.cc/linux/2015/04/27/Linux%E4%BD%BF%E7%94%A8SSH%E5%85%AC%E9%92%A5%E5%85%8D%E5%AF%86%E7%A0%81%E7%99%BB%E5%BD%95.html)，后续版本将加入密码支持。
+使用前需要宿主机建立与远程主机之间的[ssh公钥免密码登陆](http://b.aicode.cc/linux/2015/04/27/Linux%E4%BD%BF%E7%94%A8SSH%E5%85%AC%E9%92%A5%E5%85%8D%E5%AF%86%E7%A0%81%E7%99%BB%E5%BD%95.html)。
 
     remote-tail -hosts 'watcher@192.168.1.226,watcher@192.168.1.225' \
     -file '/usr/local/openresty/nginx/logs/access.log'
 
 ![demo](https://oayrssjpa.qnssl.com/remote-tail-demo.jpg)
+
+### 指定配置文件
+
+通过使用`-conf`参数可以为命令指定读取的配置文件，配置文件为TOML格式，请参考`example.toml`文件。
+
+配置文件`example.conf`：
+
+    # 全局配置,所有的servers中tail_file配置的默认值
+    tail_file="/data/logs/laravel.log"
+
+    # 服务器配置,可以配置多个
+    # 如果不提供password,则使用当前用户的ssh公钥,建议采用该方式,使用密码方式不安全
+    # server_name, hostname, user 配置为必选,其它可选
+    [servers]
+
+    [servers.1]
+    server_name="测试服务器1"
+    hostname="test1.server.aicode.cc"
+    user="root"
+    tail_file="/var/log/messages"
+
+    [servers.2]
+    server_name="测试服务器2"
+    hostname="test2.server.aicode.cc"
+    user="root"
+    tail_file="/var/log/messages"
+
+    [servers.3]
+    server_name="测试服务器3"
+    hostname="test2.server.aicode.cc"
+    user="demo"
+    password="123456"
+
+执行命令：
+
+    remote-tail -conf=example.toml
 
 ## 如何贡献
 
