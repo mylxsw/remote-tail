@@ -1,5 +1,8 @@
 
-export GOPATH:=$(shell pwd)
+export GOPATH:=$(shell pwd):$(GOPATH)
+
+run:
+	go run src/main.go -conf=example.toml
 
 mac:
 	go build -o bin/remote-tail-mac src/main.go

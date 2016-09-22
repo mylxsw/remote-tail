@@ -1,0 +1,26 @@
+
+# 全局配置,所有的servers中tail_file配置的默认值
+tail_file="/data/logs/laravel.log"
+
+# 服务器配置,可以配置多个
+# 如果不提供password,则使用当前用户的ssh公钥,建议采用该方式,使用密码方式不安全
+# server_name, hostname, user 配置为必选,其它可选
+[servers]
+
+[servers.1]
+server_name="测试服务器1"
+hostname="test1.server.aicode.cc"
+user="root"
+tail_file="/var/log/messages"
+
+[servers.2]
+server_name="测试服务器2"
+hostname="test2.server.aicode.cc"
+user="root"
+tail_file="/var/log/messages"
+
+[servers.3]
+server_name="测试服务器3"
+hostname="test2.server.aicode.cc"
+user="demo"
+password="123456"
