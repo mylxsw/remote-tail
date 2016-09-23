@@ -31,7 +31,7 @@ AB两台服务器中的项目均将日志写到文件系统的`/home/data/logs/l
 
 通过使用`-conf`参数可以为命令指定读取的配置文件，配置文件为TOML格式，请参考`example.toml`文件。
 
-配置文件`example.conf`：
+配置文件`example.toml`：
 
     # 全局配置,所有的servers中tail_file配置的默认值
     tail_file="/data/logs/laravel.log"
@@ -71,6 +71,7 @@ AB两台服务器中的项目均将日志写到文件系统的`/home/data/logs/l
 
 你可以在github的issue中提出你的bug或者其它需求，也可以通过以下方式直接联系我。
 
-- 微信：mylxsw
 - 微博：[管宜尧](http://weibo.com/code404)
-- QQ：729181311
+- 微信：mylxsw
+
+![WEIXIN](https://oayrssjpa.qnssl.com/IMG_0607.JPG)
