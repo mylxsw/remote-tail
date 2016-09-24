@@ -74,4 +74,4 @@ AB两台服务器中的项目均将日志写到文件系统的`/home/data/logs/l
 - 微博：[管宜尧](http://weibo.com/code404)
 - 微信：mylxsw
 
-![WEIXIN](https://oayrssjpa.qnssl.com/weixin.jpg)
+![WEIXIN](https://oayrssjpa.qnssl.com/join_weixin.jpg)
