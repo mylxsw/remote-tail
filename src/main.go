@@ -26,7 +26,7 @@ homepage: github.com/mylxsw/remote-tail
 version: 0.1
 ` + console.ColorfulText(console.TextMagenta, mossSep)
 
-var filepath *string = flag.String("file", "", "-file=\"/home/data/logs/**/*.log\"")
+var filePath *string = flag.String("file", "", "-file=\"/home/data/logs/**/*.log\"")
 var hostStr *string = flag.String("hosts", "", "-hosts=root@192.168.1.225,root@192.168.1.226")
 var configFile *string = flag.String("conf", "", "-conf=example.toml")
 
@@ -57,7 +57,7 @@ func printWelcomeMessage(config command.Config) {
 	fmt.Printf("\n%s\n", console.ColorfulText(console.TextCyan, mossSep))
 }
 
-func parseConfig(filepath string, hostStr string, configFile string) (config command.Config) {
+func parseConfig(filePath string, hostStr string, configFile string) (config command.Config) {
 	if configFile != "" {
 		if _, err := toml.DecodeFile(configFile, &config); err != nil {
 			log.Fatal(err)
@@ -66,7 +66,7 @@ func parseConfig(filepath string, hostStr string, configFile string) (config com
 	} else {
 
 		var hosts []string = strings.Split(hostStr, ",")
-		var script string = fmt.Sprintf("tail -f %s", filepath)
+		var script string = fmt.Sprintf("tail -f %s", filePath)
 
 		config = command.Config{}
 		config.TailFile = script
@@ -94,11 +94,11 @@ func main() {
 
 	flag.Parse()
 
-	if (*filepath == "" || *hostStr == "") && *configFile == "" {
+	if (*filePath == "" || *hostStr == "") && *configFile == "" {
 		usageAndExit("")
 	}
 
-	config := parseConfig(*filepath, *hostStr, *configFile)
+	config := parseConfig(*filePath, *hostStr, *configFile)
 	printWelcomeMessage(config)
 
 	outputs := make(chan command.Message, 20)
@@ -107,6 +107,12 @@ func main() {
 	for _, server := range config.Servers {
 		wg.Add(1)
 		go func(server command.Server) {
+			defer func() {
+				if err := recover(); err != nil {
+					fmt.Printf(console.ColorfulText(console.TextRed, "Error: %s\n"), err)
+				}
+			}()
+			defer wg.Done()
 
 			// 如果单独的服务配置没有tail_file,则使用全局配置
 			if server.TailFile == "" {
@@ -115,17 +121,14 @@ func main() {
 
 			cmd, err := command.NewCommand(server)
 			if err != nil {
-				log.Fatal(err)
+				panic(err)
 			}
 
 			cmd.Execute(outputs)
-
-			wg.Done()
 		}(server)
 	}
 
 	if len(config.Servers) > 0 {
-		wg.Add(1)
 		go func() {
 			for output := range outputs {
 				fmt.Printf(
@@ -135,12 +138,10 @@ func main() {
 					output.Content,
 				)
 			}
-
-			wg.Done()
 		}()
-
-		wg.Wait()
 	} else {
-		log.Fatal("没有可用的目标主机")
+		fmt.Println(console.ColorfulText(console.TextRed, "没有可用的目标主机"))
 	}
+
+	wg.Wait()
 }

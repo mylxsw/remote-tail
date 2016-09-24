@@ -4,8 +4,9 @@ import (
 	"os/exec"
 	"bufio"
 	"io"
-	"log"
 	"fmt"
+	"sync"
+	"console"
 )
 
 type Command struct {
@@ -57,29 +58,43 @@ func NewCommand(server Server) (cmd *Command, err error) {
 	return
 }
 
-func (cmd *Command) Execute(stdout chan Message) {
+func (cmd *Command) Execute(output chan Message) {
 	if err := cmd.command.Start(); err != nil {
-		log.Fatalf("[%s] 命令启动失败: %s", cmd.Host, err)
+		panic(fmt.Sprintf("[%s] 命令启动失败: %s", cmd.Host, err))
 	}
 
-	bindOutput(cmd.Host, &cmd.Stdout, stdout)
+	var wg sync.WaitGroup
+	wg.Add(2)
+	go func () {
+		defer wg.Done()
+		bindOutput(cmd.Host, output, &cmd.Stdout, "", 0)
+	}()
+	go func () {
+		defer wg.Done()
+		bindOutput(cmd.Host, output, &cmd.Stderr, "Error:", console.TextRed)
+	}()
 
-	// TODO 处理标准错误输出
+	wg.Wait()
 
 	if err := cmd.command.Wait(); err != nil {
-		log.Fatalf("[%s] 等待命令执行失败: %s", cmd.Host, err)
+		panic(fmt.Sprintf("[%s] 等待命令执行失败: %s", cmd.Host, err))
 	}
 }
 
-func bindOutput(host string, input *io.ReadCloser, output chan Message) {
+func bindOutput(host string, output chan Message, input *io.ReadCloser, prefix string, color int) {
 	reader := bufio.NewReader(*input)
 	for {
 		line, err := reader.ReadString('\n')
 		if err != nil || io.EOF == err {
 			if err != io.EOF {
-				log.Fatalf("[%s] 命令执行失败: %d", host, err)
+				panic(fmt.Sprintf("[%s] 命令执行失败: %s", host, err))
 			}
 			break
+		}
+
+		line = prefix + line
+		if color != 0 {
+			line = console.ColorfulText(color, line)
 		}
 
 		output <- Message{
