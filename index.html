@@ -54,6 +54,10 @@
 
 <p><img src="https://oayrssjpa.qnssl.com/remote-tail-demo.jpg" alt="demo"></p>
 
+<blockquote>
+<p>如果服务器sshd监听的非默认端口22，可以使用<code>watcher@192.168.1.226:2222</code>这种方式指定其它端口。</p>
+</blockquote>
+
 <h3>
 <a id="指定配置文件" class="anchor" href="#%E6%8C%87%E5%AE%9A%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>指定配置文件</h3>
 
@@ -74,6 +78,8 @@ server_name="测试服务器1"
 hostname="test1.server.aicode.cc"
 user="root"
 tail_file="/var/log/messages"
+# 指定ssh端口，不指定的情况下使用默认值22
+port=2222
 
 [servers.2]
 server_name="测试服务器2"
@@ -109,7 +115,7 @@ password="123456"
 <li>微信：mylxsw</li>
 </ul>
 
-<p><img src="https://oayrssjpa.qnssl.com/weixin.jpg" alt="WEIXIN"></p>
+<p><img src="https://oayrssjpa.qnssl.com/join_weixin.jpg" alt="WEIXIN"></p>
 
       <footer class="site-footer">
         <span class="site-footer-owner"><a href="https://github.com/mylxsw/remote-tail">RemoteTail</a> is maintained by <a href="https://github.com/mylxsw">mylxsw</a>.</span>
