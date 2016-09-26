@@ -27,6 +27,8 @@ AB两台服务器中的项目均将日志写到文件系统的`/home/data/logs/l
 
 ![demo](https://oayrssjpa.qnssl.com/remote-tail-demo.jpg)
 
+> 如果服务器sshd监听的非默认端口22，可以使用`watcher@192.168.1.226:2222`这种方式指定其它端口。
+
 ### 指定配置文件
 
 通过使用`-conf`参数可以为命令指定读取的配置文件，配置文件为TOML格式，请参考`example.toml`文件。
@@ -46,6 +48,8 @@ AB两台服务器中的项目均将日志写到文件系统的`/home/data/logs/l
     hostname="test1.server.aicode.cc"
     user="root"
     tail_file="/var/log/messages"
+    # 指定ssh端口，不指定的情况下使用默认值22
+    port=2222
 
     [servers.2]
     server_name="测试服务器2"

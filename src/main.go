@@ -10,6 +10,7 @@ import (
 	"console"
 	"command"
 	"github.com/BurntSushi/toml"
+	"strconv"
 )
 
 var mossSep = ".--. --- .-- . .-. . -..   -... -.--   -- -.-- .-.. -..- ... .-- \n"
@@ -23,7 +24,7 @@ var welcomeMessage string = `
 
 author: mylxsw
 homepage: github.com/mylxsw/remote-tail
-version: 0.1
+version: 0.1.1
 ` + console.ColorfulText(console.TextMagenta, mossSep)
 
 var filePath *string = flag.String("file", "", "-file=\"/home/data/logs/**/*.log\"")
@@ -72,11 +73,16 @@ func parseConfig(filePath string, hostStr string, configFile string) (config com
 		config.TailFile = script
 		config.Servers = make(map[string]command.Server, len(hosts))
 		for index, hostname := range hosts {
-			hostInfo := strings.Split(hostname, "@")
+			hostInfo := strings.Split(strings.Replace(hostname, ":", "@", -1), "@")
+			var port int
+			if len(hostInfo) > 2 {
+				port, _ = strconv.Atoi(hostInfo[2])
+			}
 			config.Servers["server_" + string(index)] = command.Server{
 				ServerName: "server_" + string(index),
 				Hostname: hostInfo[1],
 				User: hostInfo[0],
+				Port: port,
 			}
 		}
 	}
@@ -117,6 +123,11 @@ func main() {
 			// 如果单独的服务配置没有tail_file,则使用全局配置
 			if server.TailFile == "" {
 				server.TailFile = config.TailFile
+			}
+
+			// 如果服务配置没有port，则使用默认值22
+			if server.Port == 0 {
+				server.Port = 22
 			}
 
 			cmd, err := command.NewCommand(server)

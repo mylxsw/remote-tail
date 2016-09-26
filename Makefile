@@ -21,4 +21,4 @@ deploy-local:
 	cp ./bin/remote-tail-mac /usr/local/bin/remote-tail
 
 clean:
-	rm -fr ./bin/remote-tail-linux ./bin/remote-tail-mac ./bin/remote-tail-win
+	rm -fr ./bin/remote-tail-linux ./bin/remote-tail-mac ./bin/remote-tail-win.exe

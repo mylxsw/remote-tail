@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"sync"
 	"console"
+	"strconv"
 )
 
 type Command struct {
@@ -37,7 +38,7 @@ func NewCommand(server Server) (cmd *Command, err error) {
 		command = "sshpass"
 		commandParameters = append(commandParameters, "-p", server.Password, "ssh")
 	}
-	commandParameters = append(commandParameters, "-f", cmd.Host, cmd.Script)
+	commandParameters = append(commandParameters, "-p", strconv.Itoa(server.Port), "-f", cmd.Host, cmd.Script)
 
 	cmd.command = exec.Command(command, commandParameters...)
 

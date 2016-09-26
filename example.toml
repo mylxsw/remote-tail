@@ -12,6 +12,7 @@ server_name="测试服务器1"
 hostname="test1.server.aicode.cc"
 user="root"
 tail_file="/var/log/messages"
+port=22
 
 [servers.2]
 server_name="测试服务器2"
