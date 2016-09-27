@@ -7,10 +7,10 @@ import (
 	"flag"
 	"strings"
 	"os"
-	"console"
-	"command"
 	"github.com/BurntSushi/toml"
 	"strconv"
+	"github.com/mylxsw/remote-tail/console"
+	"github.com/mylxsw/remote-tail/command"
 )
 
 var mossSep = ".--. --- .-- . .-. . -..   -... -.--   -- -.-- .-.. -..- ... .-- \n"

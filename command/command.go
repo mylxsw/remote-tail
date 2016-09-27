@@ -6,8 +6,8 @@ import (
 	"io"
 	"fmt"
 	"sync"
-	"console"
 	"strconv"
+	"github.com/mylxsw/remote-tail/console"
 )
 
 type Command struct {
