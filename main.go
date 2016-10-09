@@ -67,10 +67,9 @@ func parseConfig(filePath string, hostStr string, configFile string) (config com
 	} else {
 
 		var hosts []string = strings.Split(hostStr, ",")
-		var script string = fmt.Sprintf("tail -f %s", filePath)
 
 		config = command.Config{}
-		config.TailFile = script
+		config.TailFile = filePath
 		config.Servers = make(map[string]command.Server, len(hosts))
 		for index, hostname := range hosts {
 			hostInfo := strings.Split(strings.Replace(hostname, ":", "@", -1), "@")
@@ -130,11 +129,7 @@ func main() {
 				server.Port = 22
 			}
 
-			cmd, err := command.NewCommand(server)
-			if err != nil {
-				panic(err)
-			}
-
+			cmd := command.NewCommand(server)
 			cmd.Execute(outputs)
 		}(server)
 	}
