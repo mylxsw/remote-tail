@@ -6,7 +6,6 @@ import (
 	"os"
 	"io/ioutil"
 	"fmt"
-	"strings"
 )
 
 type Client struct {
@@ -26,10 +25,6 @@ func (this *Client) Connect() error {
 
 	if privateKey, err := getPrivateKey(this.PrivateKeyPath); err == nil {
 		conf.Auth = append(conf.Auth, privateKey)
-	}
-
-	if !strings.Contains(this.Host, ":") {
-		this.Host = this.Host + ":22"
 	}
 
 	client, err := ssh.Dial("tcp", this.Host, &conf)
@@ -65,4 +60,12 @@ func getPrivateKey(privateKeyPath string) (ssh.AuthMethod, error) {
 	}
 
 	return ssh.PublicKeys(signer), nil
+}
+
+func CreateTerminalModes() *ssh.TerminalModes {
+	return &ssh.TerminalModes{
+		ssh.ECHO: 0,
+		ssh.TTY_OP_ISPEED: 14400,
+		ssh.TTY_OP_OSPEED: 14400,
+	}
 }

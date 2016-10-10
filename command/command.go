@@ -7,6 +7,8 @@ import (
 	"sync"
 	"github.com/mylxsw/remote-tail/console"
 	"github.com/mylxsw/remote-tail/ssh"
+	"strings"
+	"strconv"
 )
 
 type Command struct {
@@ -18,11 +20,14 @@ type Command struct {
 	Server  Server
 }
 
+// The message used by channel to transport log line by line
 type Message struct {
 	Host    string
 	Content string
 }
 
+
+// Create a new command
 func NewCommand(server Server) (cmd *Command) {
 	cmd = &Command{
 		Host: server.Hostname,
@@ -31,10 +36,16 @@ func NewCommand(server Server) (cmd *Command) {
 		Server: server,
 	}
 
+	if !strings.Contains(cmd.Host, ":") {
+		cmd.Host = cmd.Host + ":" + strconv.Itoa(server.Port)
+	}
+
 	return
 }
 
+// Execute the remote command
 func (cmd *Command) Execute(output chan Message) {
+
 	client := &ssh.Client{
 		Host: cmd.Host,
 		User: cmd.User,
@@ -42,28 +53,28 @@ func (cmd *Command) Execute(output chan Message) {
 	}
 
 	if err := client.Connect(); err != nil {
-		panic(fmt.Sprintf("[%s] 连接到服务器失败: %s", cmd.Host, err))
+		panic(fmt.Sprintf("[%s] unable to connect: %s", cmd.Host, err))
 	}
 	defer client.Close()
 
 	session, err := client.NewSession()
 	if err != nil {
-		panic(fmt.Sprintf("[%s] 创建会话失败: %s", cmd.Host, err))
+		panic(fmt.Sprintf("[%s] unable to create session: %s", cmd.Host, err))
 	}
 	defer session.Close()
 
+	if err := session.RequestPty("xterm", 80, 40, *ssh.CreateTerminalModes()); err != nil {
+		panic(fmt.Sprintf("[%s] unable to create pty: %v", cmd.Host, err))
+	}
+
 	cmd.Stdout, err = session.StdoutPipe()
 	if err != nil {
-		panic(fmt.Sprintf("[%s] 标准输出重定向失败: %s", cmd.Host, err))
+		panic(fmt.Sprintf("[%s] redirect stdout failed: %s", cmd.Host, err))
 	}
 
 	cmd.Stderr, err = session.StderrPipe()
 	if err != nil {
-		panic(fmt.Sprintf("[%s] 标准错误输出重定向失败: %s", cmd.Host, err))
-	}
-
-	if err = session.Start(cmd.Script); err != nil {
-		panic(fmt.Sprintf("[%s] 命令执行失败: %s", cmd.Host, err))
+		panic(fmt.Sprintf("[%s] redirect stderr failed: %s", cmd.Host, err))
 	}
 
 	var wg sync.WaitGroup
@@ -78,20 +89,25 @@ func (cmd *Command) Execute(output chan Message) {
 		bindOutput(cmd.Host, output, &cmd.Stderr, "Error:", console.TextRed)
 	}()
 
+	if err = session.Start(cmd.Script); err != nil {
+		panic(fmt.Sprintf("[%s] failed to execute command: %s", cmd.Host, err))
+	}
+
 	if err = session.Wait(); err != nil {
-		panic(fmt.Sprintf("[%s] 命令执行等待失败: %s", cmd.Host, err))
+		panic(fmt.Sprintf("[%s] failed to wait command: %s", cmd.Host, err))
 	}
 
 	wg.Wait()
 }
 
+// bing the pipe output for formatted output to channel
 func bindOutput(host string, output chan Message, input *io.Reader, prefix string, color int) {
 	reader := bufio.NewReader(*input)
 	for {
 		line, err := reader.ReadString('\n')
 		if err != nil || io.EOF == err {
 			if err != io.EOF {
-				panic(fmt.Sprintf("[%s] 命令执行失败: %s", host, err))
+				panic(fmt.Sprintf("[%s] faield to execute command: %s", host, err))
 			}
 			break
 		}

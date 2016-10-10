@@ -47,7 +47,7 @@ func printWelcomeMessage(config command.Config) {
 	fmt.Println(welcomeMessage)
 
 	for _, server := range config.Servers {
-		// 如果单独的服务配置没有tail_file,则使用全局配置
+		// If there is no tail_file for a service configuration, the global configuration is used
 		if server.TailFile == "" {
 			server.TailFile = config.TailFile
 		}
@@ -106,7 +106,7 @@ func main() {
 	config := parseConfig(*filePath, *hostStr, *configFile)
 	printWelcomeMessage(config)
 
-	outputs := make(chan command.Message, 20)
+	outputs := make(chan command.Message, 255)
 	var wg sync.WaitGroup
 
 	for _, server := range config.Servers {
@@ -119,12 +119,12 @@ func main() {
 			}()
 			defer wg.Done()
 
-			// 如果单独的服务配置没有tail_file,则使用全局配置
+			// If there is no tail_file for a service configuration, the global configuration is used
 			if server.TailFile == "" {
 				server.TailFile = config.TailFile
 			}
 
-			// 如果服务配置没有port，则使用默认值22
+			// If the service configuration does not have a port, the default value of 22 is used
 			if server.Port == 0 {
 				server.Port = 22
 			}
@@ -146,7 +146,7 @@ func main() {
 			}
 		}()
 	} else {
-		fmt.Println(console.ColorfulText(console.TextRed, "没有可用的目标主机"))
+		fmt.Println(console.ColorfulText(console.TextRed, "No target host is available"))
 	}
 
 	wg.Wait()
