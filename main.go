@@ -1,16 +1,16 @@
 package main
 
 import (
-	"fmt"
-	"log"
-	"sync"
 	"flag"
-	"strings"
-	"os"
+	"fmt"
 	"github.com/BurntSushi/toml"
-	"strconv"
-	"github.com/mylxsw/remote-tail/console"
 	"github.com/mylxsw/remote-tail/command"
+	"github.com/mylxsw/remote-tail/console"
+	"log"
+	"os"
+	"strconv"
+	"strings"
+	"sync"
 )
 
 var mossSep = ".--. --- .-- . .-. . -..   -... -.--   -- -.-- .-.. -..- ... .-- \n"
@@ -24,7 +24,7 @@ var welcomeMessage string = `
 
 author: mylxsw
 homepage: github.com/mylxsw/remote-tail
-version: 0.1.1
+version: 0.1.2
 ` + console.ColorfulText(console.TextMagenta, mossSep)
 
 var filePath *string = flag.String("file", "", "-file=\"/home/data/logs/**/*.log\"")
@@ -77,11 +77,11 @@ func parseConfig(filePath string, hostStr string, configFile string) (config com
 			if len(hostInfo) > 2 {
 				port, _ = strconv.Atoi(hostInfo[2])
 			}
-			config.Servers["server_" + string(index)] = command.Server{
+			config.Servers["server_"+string(index)] = command.Server{
 				ServerName: "server_" + string(index),
-				Hostname: hostInfo[1],
-				User: hostInfo[0],
-				Port: port,
+				Hostname:   hostInfo[1],
+				User:       hostInfo[0],
+				Port:       port,
 			}
 		}
 	}
