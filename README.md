@@ -12,7 +12,7 @@ AB两台服务器中的项目均将日志写到文件系统的`/home/data/logs/l
 
 ## 安装
 
-在[release页面]下载(https://github.com/mylxsw/remote-tail/releases)对应的`remote-tail-平台`可执行文件，将该文件加入到系统的`PATH`环境变量指定的目录中即可。
+在[release页面](https://github.com/mylxsw/remote-tail/releases)下载对应的`remote-tail-平台`可执行文件，将该文件加入到系统的`PATH`环境变量指定的目录中即可。
 
 比如，Centos下可以放到`/usr/local/bin`目录。
 
