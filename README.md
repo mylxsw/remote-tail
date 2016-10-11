@@ -2,7 +2,7 @@
 
 RemoteTail是一款支持同步显示多台远程服务器的日志文件内容更新的工具，使用它可以让你同时监控多台服务器中某个（某些）日志文件的变更，将多台服务器的`tail -f xxx.log`命令的输出合并展示。
 
-![logo](https://oayrssjpa.qnssl.com/remote-tail.jpg)
+![logo](https://oayrssjpa.qnssl.com/remote-tail.jpg?20161011)
 
 ## 使用场景
 
@@ -25,7 +25,7 @@ AB两台服务器中的项目均将日志写到文件系统的`/home/data/logs/l
     remote-tail -hosts 'watcher@192.168.1.226,watcher@192.168.1.225' \
     -file '/usr/local/openresty/nginx/logs/access.log'
 
-![demo](https://oayrssjpa.qnssl.com/remote-tail-demo.jpg)
+![demo](https://oayrssjpa.qnssl.com/remote-tail-demo.jpg?20161011)
 
 > 如果服务器sshd监听的非默认端口22，可以使用`watcher@192.168.1.226:2222`这种方式指定其它端口。
 
