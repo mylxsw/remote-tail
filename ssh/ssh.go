@@ -1,11 +1,11 @@
 package ssh
 
 import (
-	"golang.org/x/crypto/ssh"
-	"path/filepath"
-	"os"
-	"io/ioutil"
 	"fmt"
+	"golang.org/x/crypto/ssh"
+	"io/ioutil"
+	"os"
+	"path/filepath"
 )
 
 type Client struct {
@@ -37,7 +37,6 @@ func (this *Client) Connect() error {
 	return nil
 }
 
-
 // Close the connection
 func (this *Client) Close() {
 	this.Close()
@@ -64,7 +63,7 @@ func getPrivateKey(privateKeyPath string) (ssh.AuthMethod, error) {
 
 func CreateTerminalModes() *ssh.TerminalModes {
 	return &ssh.TerminalModes{
-		ssh.ECHO: 0,
+		ssh.ECHO:          0,
 		ssh.TTY_OP_ISPEED: 14400,
 		ssh.TTY_OP_OSPEED: 14400,
 	}

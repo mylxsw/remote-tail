@@ -2,22 +2,22 @@ package command
 
 import (
 	"bufio"
-	"io"
 	"fmt"
-	"sync"
 	"github.com/mylxsw/remote-tail/console"
 	"github.com/mylxsw/remote-tail/ssh"
-	"strings"
+	"io"
 	"strconv"
+	"strings"
+	"sync"
 )
 
 type Command struct {
-	Host    string
-	User    string
-	Script  string
-	Stdout  io.Reader
-	Stderr  io.Reader
-	Server  Server
+	Host   string
+	User   string
+	Script string
+	Stdout io.Reader
+	Stderr io.Reader
+	Server Server
 }
 
 // The message used by channel to transport log line by line
@@ -26,12 +26,11 @@ type Message struct {
 	Content string
 }
 
-
 // Create a new command
 func NewCommand(server Server) (cmd *Command) {
 	cmd = &Command{
-		Host: server.Hostname,
-		User: server.User,
+		Host:   server.Hostname,
+		User:   server.User,
 		Script: fmt.Sprintf("tail -f %s", server.TailFile),
 		Server: server,
 	}
@@ -47,8 +46,8 @@ func NewCommand(server Server) (cmd *Command) {
 func (cmd *Command) Execute(output chan Message) {
 
 	client := &ssh.Client{
-		Host: cmd.Host,
-		User: cmd.User,
+		Host:     cmd.Host,
+		User:     cmd.User,
 		Password: cmd.Server.Password,
 	}
 
@@ -80,11 +79,11 @@ func (cmd *Command) Execute(output chan Message) {
 	var wg sync.WaitGroup
 	wg.Add(2)
 
-	go func () {
+	go func() {
 		defer wg.Done()
 		bindOutput(cmd.Host, output, &cmd.Stdout, "", 0)
 	}()
-	go func () {
+	go func() {
 		defer wg.Done()
 		bindOutput(cmd.Host, output, &cmd.Stderr, "Error:", console.TextRed)
 	}()
@@ -118,7 +117,7 @@ func bindOutput(host string, output chan Message, input *io.Reader, prefix strin
 		}
 
 		output <- Message{
-			Host: host,
+			Host:    host,
 			Content: line,
 		}
 	}
