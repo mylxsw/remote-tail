@@ -3,29 +3,20 @@ package main
 import (
 	"flag"
 	"fmt"
-	"github.com/BurntSushi/toml"
-	"github.com/mylxsw/remote-tail/command"
-	"github.com/mylxsw/remote-tail/console"
 	"log"
 	"os"
 	"strconv"
 	"strings"
 	"sync"
+
+	"github.com/BurntSushi/toml"
+	"github.com/mylxsw/remote-tail/command"
+	"github.com/mylxsw/remote-tail/console"
 )
 
 var mossSep = ".--. --- .-- . .-. . -..   -... -.--   -- -.-- .-.. -..- ... .-- \n"
 
-var welcomeMessage string = `
- ____                      _      _____     _ _
-|  _ \ ___ _ __ ___   ___ | |_ __|_   _|_ _(_) |
-| |_) / _ \ '_ ' _ \ / _ \| __/ _ \| |/ _' | | |
-|  _ <  __/ | | | | | (_) | ||  __/| | (_| | | |
-|_| \_\___|_| |_| |_|\___/ \__\___||_|\__,_|_|_|
-
-author: mylxsw
-homepage: github.com/mylxsw/remote-tail
-version: 0.1.2
-` + console.ColorfulText(console.TextMagenta, mossSep)
+var welcomeMessage string = getWelcomeMessage() + console.ColorfulText(console.TextMagenta, mossSep)
 
 var filePath *string = flag.String("file", "", "-file=\"/home/data/logs/**/*.log\"")
 var hostStr *string = flag.String("hosts", "", "-hosts=root@192.168.1.225,root@192.168.1.226")

@@ -1,6 +1,6 @@
 
 run:
-	go run main.go -conf=example.toml
+	go run *.go -conf=example.toml
 
 mac:
 	go build -o bin/remote-tail-mac main.go
