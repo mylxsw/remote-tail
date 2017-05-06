@@ -7,7 +7,7 @@ tail_file="/data/logs/laravel.log"
 slient=false
 
 # 服务器配置,可以配置多个
-# 如果不提供password,则使用当前用户的ssh公钥,建议采用该方式,使用密码方式不安全
+# 如果不提供password,则使用当前用户的ssh公钥(private_key_path=/home/mylxsw/.ssh/id_rsa),建议采用该方式,使用密码方式不安全
 # server_name, hostname, user 配置为必选,其它可选
 [servers]
 
