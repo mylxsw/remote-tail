@@ -1,6 +1,8 @@
 # RemoteTail
 
-RemoteTail是一款支持同步显示多台远程服务器的日志文件内容更新的工具，使用它可以让你同时监控多台服务器中某个（某些）日志文件的变更，将多台服务器的`tail -f xxx.log`命令的输出合并展示。
+RemoteTail是一款支持同步显示多台远程服务器的日志文件内容更新的工具，使用它可以让你同时监控多台服务器中某个（某些）日志文件的变更，将多台服务器的`tail -f xxx.log`命令的输出合并展示。相比于其他流行的日志手机工具，RemoteTail去掉了在目标及其安装agent的必要，减小了与目标机器的耦合，但需要注意的是，由于日志收集使用的是远程执行`tail`命令，因此如果进程退出重启后会出现日志重复或者丢失部分日志的风险。
+
+RemoteTail只适应于简单的日志收集聚合，如果你不介意重启服务时日志丢失或者重复的问题，那么推荐你尝试一下。
 
 ![logo](https://oayrssjpa.qnssl.com/remote-tail.jpg?20161011)
 
@@ -28,6 +30,14 @@ AB两台服务器中的项目均将日志写到文件系统的`/home/data/logs/l
 ![demo](https://oayrssjpa.qnssl.com/remote-tail-demo.jpg?20161011)
 
 > 如果服务器sshd监听的非默认端口22，可以使用`watcher@192.168.1.226:2222`这种方式指定其它端口。
+
+### 简单的日志收集
+
+日志聚合后作为单独文件存储，可以使用下面的方法
+
+    nohup remote-tail -hosts 'watcher@192.168.1.226,watcher@192.168.1.225' -file '/usr/local/openresthy/nginx/logs/access.log' -slient=true > ./res.log &
+
+> `-slient=true`参数用于指定RemoteTail不输出欢迎信息和控制台彩色字符，只输出纯净整洁的日志。
 
 ### 指定配置文件
 

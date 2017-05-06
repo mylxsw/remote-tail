@@ -2,6 +2,10 @@
 # 全局配置,所有的servers中tail_file配置的默认值
 tail_file="/data/logs/laravel.log"
 
+# 是否是静默模式
+# 静默模式启动时不会输出welcome消息
+slient=false
+
 # 服务器配置,可以配置多个
 # 如果不提供password,则使用当前用户的ssh公钥,建议采用该方式,使用密码方式不安全
 # server_name, hostname, user 配置为必选,其它可选

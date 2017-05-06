@@ -16,11 +16,12 @@ import (
 
 var mossSep = ".--. --- .-- . .-. . -..   -... -.--   -- -.-- .-.. -..- ... .-- \n"
 
-var welcomeMessage string = getWelcomeMessage() + console.ColorfulText(console.TextMagenta, mossSep)
+var welcomeMessage = getWelcomeMessage() + console.ColorfulText(console.TextMagenta, mossSep)
 
-var filePath *string = flag.String("file", "", "-file=\"/home/data/logs/**/*.log\"")
-var hostStr *string = flag.String("hosts", "", "-hosts=root@192.168.1.225,root@192.168.1.226")
-var configFile *string = flag.String("conf", "", "-conf=example.toml")
+var filePath = flag.String("file", "", "-file=\"/home/data/logs/**/*.log\"")
+var hostStr = flag.String("hosts", "", "-hosts=root@192.168.1.225,root@192.168.1.226")
+var configFile = flag.String("conf", "", "-conf=example.toml")
+var slient = flag.Bool("slient", false, "-slient=false")
 
 func usageAndExit(message string) {
 
@@ -49,7 +50,7 @@ func printWelcomeMessage(config command.Config) {
 	fmt.Printf("\n%s\n", console.ColorfulText(console.TextCyan, mossSep))
 }
 
-func parseConfig(filePath string, hostStr string, configFile string) (config command.Config) {
+func parseConfig(filePath string, hostStr string, configFile string, slient bool) (config command.Config) {
 	if configFile != "" {
 		if _, err := toml.DecodeFile(configFile, &config); err != nil {
 			log.Fatal(err)
@@ -57,11 +58,12 @@ func parseConfig(filePath string, hostStr string, configFile string) (config com
 
 	} else {
 
-		var hosts []string = strings.Split(hostStr, ",")
+		hosts := strings.Split(hostStr, ",")
 
 		config = command.Config{}
 		config.TailFile = filePath
 		config.Servers = make(map[string]command.Server, len(hosts))
+		config.Slient = slient
 		for index, hostname := range hosts {
 			hostInfo := strings.Split(strings.Replace(hostname, ":", "@", -1), "@")
 			var port int
@@ -94,8 +96,10 @@ func main() {
 		usageAndExit("")
 	}
 
-	config := parseConfig(*filePath, *hostStr, *configFile)
-	printWelcomeMessage(config)
+	config := parseConfig(*filePath, *hostStr, *configFile, *slient)
+	if !config.Slient {
+		printWelcomeMessage(config)
+	}
 
 	outputs := make(chan command.Message, 255)
 	var wg sync.WaitGroup
@@ -128,12 +132,22 @@ func main() {
 	if len(config.Servers) > 0 {
 		go func() {
 			for output := range outputs {
-				fmt.Printf(
-					"%s %s %s",
-					console.ColorfulText(console.TextGreen, output.Host),
-					console.ColorfulText(console.TextYellow, "->"),
-					output.Content,
-				)
+				content := strings.Trim(output.Content, "\r\n")
+				// 去掉文件名称输出
+				if content == "" || (strings.HasPrefix(content, "==>") && strings.HasSuffix(content, "<==")) {
+					continue
+				}
+
+				if config.Slient {
+					fmt.Printf("%s -> %s\n", output.Host, content)
+				} else {
+					fmt.Printf(
+						"%s %s %s\n",
+						console.ColorfulText(console.TextGreen, output.Host),
+						console.ColorfulText(console.TextYellow, "->"),
+						content,
+					)
+				}
 			}
 		}()
 	} else {
