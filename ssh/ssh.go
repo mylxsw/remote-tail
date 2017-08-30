@@ -2,10 +2,11 @@ package ssh
 
 import (
 	"fmt"
-	"golang.org/x/crypto/ssh"
 	"io/ioutil"
 	"os"
 	"path/filepath"
+
+	"golang.org/x/crypto/ssh"
 )
 
 type Client struct {
@@ -17,7 +18,10 @@ type Client struct {
 }
 
 func (this *Client) Connect() error {
-	conf := ssh.ClientConfig{User: this.User}
+	conf := ssh.ClientConfig{
+		User:            this.User,
+		HostKeyCallback: ssh.InsecureIgnoreHostKey(),
+	}
 
 	if this.Password != "" {
 		conf.Auth = append(conf.Auth, ssh.Password(this.Password))
