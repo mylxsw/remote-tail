@@ -22,7 +22,7 @@ port=22
 server_name="测试服务器2"
 hostname="test2.server.aicode.cc"
 user="root"
-tail_file="/var/log/messages"
+tail_file="/var/log/messages-not-exist"
 
 [servers.3]
 server_name="测试服务器3"

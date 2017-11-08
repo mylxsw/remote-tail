@@ -6,7 +6,6 @@ import (
 	"io"
 	"strconv"
 	"strings"
-	"sync"
 
 	"github.com/mylxsw/remote-tail/console"
 	"github.com/mylxsw/remote-tail/ssh"
@@ -78,17 +77,8 @@ func (cmd *Command) Execute(output chan Message) {
 		panic(fmt.Sprintf("[%s] redirect stderr failed: %s", cmd.Host, err))
 	}
 
-	var wg sync.WaitGroup
-	wg.Add(2)
-
-	go func() {
-		defer wg.Done()
-		bindOutput(cmd.Host, output, &cmd.Stdout, "", 0)
-	}()
-	go func() {
-		defer wg.Done()
-		bindOutput(cmd.Host, output, &cmd.Stderr, "Error:", console.TextRed)
-	}()
+	go bindOutput(cmd.Host, output, &cmd.Stdout, "", 0)
+	go bindOutput(cmd.Host, output, &cmd.Stderr, "Error:", console.TextRed)
 
 	if err = session.Start(cmd.Script); err != nil {
 		panic(fmt.Sprintf("[%s] failed to execute command: %s", cmd.Host, err))
@@ -97,8 +87,6 @@ func (cmd *Command) Execute(output chan Message) {
 	if err = session.Wait(); err != nil {
 		panic(fmt.Sprintf("[%s] failed to wait command: %s", cmd.Host, err))
 	}
-
-	wg.Wait()
 }
 
 // bing the pipe output for formatted output to channel

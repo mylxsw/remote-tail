@@ -43,7 +43,7 @@ func (this *Client) Connect() error {
 
 // Close the connection
 func (this *Client) Close() {
-	this.Close()
+	this.Client.Close()
 }
 
 // Get the private key for current user
