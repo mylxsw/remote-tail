@@ -20,18 +20,18 @@ type Command struct {
 	Server Server
 }
 
-// The message used by channel to transport log line by line
+// Message The message used by channel to transport log line by line
 type Message struct {
 	Host    string
 	Content string
 }
 
-// Create a new command
+// NewCommand Create a new command
 func NewCommand(server Server) (cmd *Command) {
 	cmd = &Command{
 		Host:   server.Hostname,
 		User:   server.User,
-		Script: fmt.Sprintf("tail -f %s", server.TailFile),
+		Script: fmt.Sprintf("tail --retry --follow=name %s", server.TailFile),
 		Server: server,
 	}
 
