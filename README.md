@@ -4,7 +4,7 @@ RemoteTail是一款支持同步显示多台远程服务器的日志文件内容�
 
 RemoteTail只适应于简单的日志收集聚合，如果你不介意重启服务时日志丢失或者重复的问题，那么推荐你尝试一下。
 
-![logo](https://oayrssjpa.qnssl.com/remote-tail.jpg?20161011)
+![logo](https://ssl.aicode.cc/remote-tail.jpg?20161011)
 
 ## 使用场景
 
@@ -22,12 +22,12 @@ AB两台服务器中的项目均将日志写到文件系统的`/home/data/logs/l
 
 ## 使用方法
 
-使用前需要宿主机建立与远程主机之间的[ssh公钥免密码登陆](http://b.aicode.cc/linux/2015/04/27/Linux%E4%BD%BF%E7%94%A8SSH%E5%85%AC%E9%92%A5%E5%85%8D%E5%AF%86%E7%A0%81%E7%99%BB%E5%BD%95.html)。
+使用前需要宿主机建立与远程主机之间的[ssh公钥免密码登陆](https://aicode.cc/linux-mian-mi-ma-deng-lu.html)。
 
     remote-tail -hosts 'watcher@192.168.1.226,watcher@192.168.1.225' \
     -file '/usr/local/openresty/nginx/logs/access.log'
 
-![demo](https://oayrssjpa.qnssl.com/remote-tail-demo.jpg?20161011)
+![demo](https://ssl.aicode.cc/remote-tail-demo.jpg?20161011)
 
 > 如果服务器sshd监听的非默认端口22，可以使用`watcher@192.168.1.226:2222`这种方式指定其它端口。
 
@@ -88,4 +88,4 @@ AB两台服务器中的项目均将日志写到文件系统的`/home/data/logs/l
 - 微博：[管宜尧](http://weibo.com/code404)
 - 微信：mylxsw
 
-![WEIXIN](https://oayrssjpa.qnssl.com/join_weixin.jpg)
+![WEIXIN](https://ssl.aicode.cc/join_weixin.jpg)
