@@ -23,6 +23,9 @@ var hostStr = flag.String("hosts", "", "-hosts=root@192.168.1.225,root@192.168.1
 var configFile = flag.String("conf", "", "-conf=example.toml")
 var slient = flag.Bool("slient", false, "-slient=false")
 
+var Version = ""
+var GitCommit = ""
+
 func usageAndExit(message string) {
 
 	if message != "" {
@@ -165,8 +168,8 @@ func getWelcomeMessage() string {
 |  _ <  __/ | | | | | (_) | ||  __/| | (_| | | |
 |_| \_\___|_| |_| |_|\___/ \__\___||_|\__,_|_|_|
 
-author: mylxsw
-homepage: github.com/mylxsw/remote-tail
-version: 0.1.2
+Author: mylxsw
+Homepage: github.com/mylxsw/remote-tail
+Version: ` + Version + "(" + GitCommit + ")" + `
 `
 }

@@ -25,9 +25,12 @@ func (this *Client) Connect() error {
 
 	if this.Password != "" {
 		conf.Auth = append(conf.Auth, ssh.Password(this.Password))
-	}
+	} else {
+		privateKey, err := getPrivateKey(this.PrivateKeyPath)
+		if err != nil {
+			return err
+		}
 
-	if privateKey, err := getPrivateKey(this.PrivateKeyPath); err == nil {
 		conf.Auth = append(conf.Auth, privateKey)
 	}
 
