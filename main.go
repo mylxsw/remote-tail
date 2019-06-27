@@ -21,8 +21,8 @@ var welcomeMessage = getWelcomeMessage() + console.ColorfulText(console.TextMage
 var filePath = flag.String("file", "", "-file=\"/var/log/*.log\"")
 var hostStr = flag.String("hosts", "", "-hosts=root@192.168.1.101,root@192.168.1.102")
 var configFile = flag.String("conf", "", "-conf=example.toml")
+var tailFlags = flag.String("tail-flags", "--retry --follow=name", "flags for tail command, you can use -f instead if your server does't support `--retry --follow=name` flags")
 var slient = flag.Bool("slient", false, "-slient=false")
-var tailFlags = flag.String("tail_flags", "--retry --follow=name", "flags for tail command, you can use `-f` instead when your server does't support `--retry --follow=name` flags")
 
 var Version = ""
 var GitCommit = ""
