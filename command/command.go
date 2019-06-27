@@ -31,7 +31,7 @@ func NewCommand(server Server) (cmd *Command) {
 	cmd = &Command{
 		Host:   server.Hostname,
 		User:   server.User,
-		Script: fmt.Sprintf("tail --retry --follow=name %s", server.TailFile),
+		Script: fmt.Sprintf("tail %s %s", server.TailFlags, server.TailFile),
 		Server: server,
 	}
 
