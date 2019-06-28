@@ -47,6 +47,10 @@ AB两台服务器中的项目均将日志写到文件系统的`/home/data/logs/l
 
     # 全局配置,所有的servers中tail_file配置的默认值
     tail_file="/data/logs/laravel.log"
+    
+    # tail 命令的选项，一般Linux服务器不需要设置此项，采用默认值即可
+    # 如果是AIX等服务器，可能tail命令不支持下面这两个选项，可以修改该配置项为 "-f"
+    #tail_flags="--retry --follow=name"
 
     # 服务器配置,可以配置多个
     # 如果不提供password,则使用当前用户的ssh公钥,建议采用该方式,使用密码方式不安全
@@ -66,6 +70,7 @@ AB两台服务器中的项目均将日志写到文件系统的`/home/data/logs/l
     hostname="test2.server.aicode.cc"
     user="root"
     tail_file="/var/log/messages"
+    tail_flags="-f"
 
     [servers.3]
     server_name="测试服务器3"
@@ -83,9 +88,8 @@ AB两台服务器中的项目均将日志写到文件系统的`/home/data/logs/l
 
 ## 问题反馈
 
-你可以在github的issue中提出你的bug或者其它需求，也可以通过以下方式直接联系我。
+你可以在github的issue中提出你的bug或者其它需求。
 
-- 微博：[管宜尧](http://weibo.com/code404)
-- 微信：mylxsw
+## Stargazers over time
 
-![WEIXIN](https://ssl.aicode.cc/join_weixin.jpg)
+[![Stargazers over time](https://starchart.cc/mylxsw/remote-tail.svg)](https://starchart.cc/mylxsw/remote-tail)
