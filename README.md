@@ -53,7 +53,8 @@ AB两台服务器中的项目均将日志写到文件系统的`/home/data/logs/l
     #tail_flags="--retry --follow=name"
 
     # 服务器配置,可以配置多个
-    # 如果不提供password,则使用当前用户的ssh公钥,建议采用该方式,使用密码方式不安全
+    # 如果不提供 password, 则默认使用系统配置的 ssh-agent 设置，
+    # 你也可以通过指定 private_key_path 配置项来指定使用特定的私钥来登录 (private_key_path=/home/mylxsw/.ssh/id_rsa)
     # server_name, hostname, user 配置为必选,其它可选
     [servers]
 
