@@ -46,10 +46,11 @@ func NewCommand(server Server) (cmd *Command) {
 func (cmd *Command) Execute(output chan Message) {
 
 	client := &ssh.Client{
-		Host:           cmd.Host,
-		User:           cmd.User,
-		Password:       cmd.Server.Password,
-		PrivateKeyPath: cmd.Server.PrivateKeyPath,
+		Host:                 cmd.Host,
+		User:                 cmd.User,
+		Password:             cmd.Server.Password,
+		PrivateKeyPath:       cmd.Server.PrivateKeyPath,
+		PrivateKeyPassphrase: cmd.Server.PrivateKeyPassphrase,
 	}
 
 	if err := client.Connect(); err != nil {

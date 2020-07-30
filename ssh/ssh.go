@@ -13,10 +13,11 @@ import (
 )
 
 type Client struct {
-	Host           string
-	User           string
-	Password       string
-	PrivateKeyPath string
+	Host                 string
+	User                 string
+	Password             string
+	PrivateKeyPath       string
+	PrivateKeyPassphrase string
 	*ssh.Client
 }
 
@@ -29,7 +30,7 @@ func (sshClient *Client) Connect() error {
 	if sshClient.Password != "" {
 		conf.Auth = append(conf.Auth, ssh.Password(sshClient.Password))
 	} else if sshClient.PrivateKeyPath != "" {
-		privateKey, err := getPrivateKey(sshClient.PrivateKeyPath)
+		privateKey, err := getPrivateKey(sshClient.PrivateKeyPath, sshClient.PrivateKeyPassphrase)
 		if err != nil {
 			return err
 		}
@@ -65,7 +66,7 @@ func (sshClient *Client) Close() {
 }
 
 // Get the private key for current user
-func getPrivateKey(privateKeyPath string) (ssh.AuthMethod, error) {
+func getPrivateKey(privateKeyPath string, privateKeyPassphrase string) (ssh.AuthMethod, error) {
 	if !fileExist(privateKeyPath) {
 		defaultPrivateKeyPath := filepath.Join(os.Getenv("HOME"), ".ssh/id_rsa")
 		log.Printf("Warning: private key path [%s] does not exist, using default %s instead", privateKeyPath, defaultPrivateKeyPath)
@@ -78,7 +79,12 @@ func getPrivateKey(privateKeyPath string) (ssh.AuthMethod, error) {
 		return nil, fmt.Errorf("unable to parse private key: %v", err)
 	}
 
-	signer, err := ssh.ParsePrivateKey(key)
+	var signer ssh.Signer
+	if privateKeyPassphrase != "" {
+		signer, err = ssh.ParsePrivateKeyWithPassphrase(key, []byte(privateKeyPassphrase))
+	} else {
+		signer, err = ssh.ParsePrivateKey(key)
+	}
 	if err != nil {
 		return nil, fmt.Errorf("parse private key failed: %v", err)
 	}
